@@ -21,7 +21,7 @@
     </div>
 
     <div class="col">
-      <q-scroll-area class="full-height">
+      <q-scroll-area v-if="satellitesStore.TLEs.length" class="full-height">
         <q-list>
           <q-item
             v-for="sat in satellitesStore.TLEs" :key="sat.catNum"
@@ -39,6 +39,9 @@
           </q-item>
         </q-list>
       </q-scroll-area>
+      <div v-else class="fit flex justify-center items-center">
+        <q-spinner-tail color="cyan" size="3em" />
+      </div>
     </div>
 
   </div>
