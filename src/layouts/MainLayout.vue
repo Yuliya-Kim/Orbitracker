@@ -58,9 +58,13 @@
             class="menu-panel fit"
           >
 
-            <q-tab-panel name="location" class="fit"></q-tab-panel>
+            <q-tab-panel name="location" class="fit">
+              <ObserverSection />
+            </q-tab-panel>
 
-            <q-tab-panel name="satellites" class="fit"></q-tab-panel>
+            <q-tab-panel name="satellites" class="fit">
+              <SatellitesSection />
+            </q-tab-panel>
 
           </q-tab-panels>
         </template>
@@ -86,6 +90,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
+
+import ObserverSection from 'components/menuDrawer/ObserverSection.vue'
+import SatellitesSection from 'components/menuDrawer/SatellitesSection.vue'
 
 const $q = useQuasar()
 $q.dark.set(true)
