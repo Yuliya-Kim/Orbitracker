@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
-import { getCatalogNumber, getSatelliteName } from 'tle.js'
+import { date } from 'quasar'
+import { getCatalogNumber, getSatelliteName, getLatLngObj } from 'tle.js'
 
 export const useSatellitesStore = defineStore('satellites', {
   state: () => ({
@@ -52,6 +53,24 @@ export const useSatellitesStore = defineStore('satellites', {
 
       this.TLEs = tlesArr
       this.loading = false
+    },
+
+    getСurrentPosition (tle, i, time) {
+      const position = getLatLngObj(tle)
+      this.TLEs[i].lng = position.lng
+      this.TLEs[i].lat = position.lat
+    },
+
+    toggleSatelliteCheck (satellite) {
+      const i = this.TLEs.findIndex(sat => sat.catNum === satellite.catNum)
+      if (this.TLEs[i].model === true) {
+        this.TLEs[i].positionTimer = setInterval(() => {
+          this.getСurrentPosition(this.TLEs[i].tle, i, date.formatDate(new Date(), 'X'))
+        }, 1000)
+      } else {
+        clearInterval(this.TLEs[i].positionTimer)
+        this.TLEs[i].currentPosition = null
+      }
     }
   }
 })

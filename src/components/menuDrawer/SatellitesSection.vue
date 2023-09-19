@@ -25,13 +25,13 @@
         <q-list>
           <q-item
             v-for="sat in satellitesStore.TLEs" :key="sat.catNum"
-            @click="satellitesStore.toggleSatelliteCheck(sat)"
+            @click="sat.model = !sat.model, satellitesStore.toggleSatelliteCheck(sat)"
             clickable
             class="q-px-none"
             dense
           >
             <q-item-section side>
-              <q-checkbox v-model="sat.model" color="positive" dense dark />
+              <q-checkbox v-model="sat.model" @click="satellitesStore.toggleSatelliteCheck(sat)" color="positive" dense dark />
             </q-item-section>
             <q-item-section>
               <q-item-label>{{ sat.name }}</q-item-label>
