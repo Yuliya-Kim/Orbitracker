@@ -16,7 +16,8 @@
     "tle.js": "^4.7.3",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",
-    "vue-scroll-picker": "^1.1.3"
+    "vue-scroll-picker": "^1.1.3",
+    "vue3-openlayers": "^2.0.0"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.0.0",
