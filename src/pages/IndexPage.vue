@@ -19,6 +19,17 @@
           <ol-source-osm />
         </ol-tile-layer>
 
+        <ol-vector-layer>
+          <ol-source-vector>
+            <ol-feature>
+              <ol-geom-point :coordinates="transform([observerStore.positionDD.longitude, observerStore.positionDD.latitude], 'EPSG:4326', 'EPSG:3857')" />
+              <ol-style>
+                <ol-style-icon :src="positionIcon" :scale="0.8" :anchor="[0.5, 1]" />
+              </ol-style>
+            </ol-feature>
+          </ol-source-vector>
+        </ol-vector-layer>
+
       </ol-map>
     </div>
   </q-page>
@@ -26,6 +37,12 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useObserverStore } from 'stores/observer'
+import { transform } from 'ol/proj'
+import positionIcon from '../assets/position.png'
+
+const observerStore = useObserverStore()
+// const pos = ref(observerStore.positionDD)
 
 const mapRef = ref(null)
 
