@@ -19,7 +19,14 @@ export const useObserverStore = defineStore('observer', {
   }),
 
   getters: {
-    //
+    positionDD (state) {
+      const lat = state.latitude.degrees + state.latitude.minutes / 60 + state.latitude.seconds / 3600
+      const lng = state.longitude.degrees + state.longitude.minutes / 60 + state.longitude.seconds / 3600
+      return {
+        latitude: state.latitude.hemisphere === 'N' ? lat : -lat,
+        longitude: state.longitude.hemisphere === 'E' ? lng : -lng
+      }
+    }
   },
 
   actions: {
