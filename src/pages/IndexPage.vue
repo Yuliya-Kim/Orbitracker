@@ -24,7 +24,7 @@
             <ol-feature>
               <ol-geom-point :coordinates="transform([observerStore.positionDD.longitude, observerStore.positionDD.latitude], 'EPSG:4326', 'EPSG:3857')" />
               <ol-style>
-                <ol-style-icon :src="positionIcon" :scale="0.8" :anchor="[0.5, 1]" />
+                <ol-style-icon :src="positionIcon" :scale="1" :anchor="[0.5, 1]" />
               </ol-style>
             </ol-feature>
           </ol-source-vector>
@@ -36,13 +36,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useObserverStore } from 'stores/observer'
 import { transform } from 'ol/proj'
 import positionIcon from '../assets/position.png'
 
 const observerStore = useObserverStore()
-// const pos = ref(observerStore.positionDD)
 
 const mapRef = ref(null)
 
@@ -53,6 +52,49 @@ const zoom = ref(0)
 // const projection = ref('EPSG:4326')
 const projection = ref('EPSG:3857')
 
+function coordsDDtoDMS (val, type) {
+  const coords = Math.abs(val)
+  return {
+    degrees: Math.trunc(coords),
+    minutes: Math.trunc((coords % 1) * 60),
+    seconds: Math.trunc((((coords % 1) * 60) % 1) * 60),
+    hemisphere: type === 'lat' ? (val < 0 ? 'S' : 'N') : (val < 0 ? 'W' : 'E')
+  }
+}
+
+function fixLng (value) {
+  value = value % 360
+  if (value < -180) {
+    value += 360
+  }
+  if (value > 180) {
+    value -= 360
+  }
+  return value
+}
+
+onMounted(() => {
+  const map = mapRef.value?.map
+
+  map.getViewport().addEventListener('contextmenu', function (evt) {
+    evt.preventDefault()
+
+    const coords = transform(map.getEventCoordinate(evt), 'EPSG:3857', 'EPSG:4326')
+
+    const lat = coordsDDtoDMS(coords[1], 'lat')
+    const lng = coordsDDtoDMS(fixLng(coords[0]), 'lng')
+
+    observerStore.latitude.degrees = lat.degrees
+    observerStore.latitude.minutes = lat.minutes
+    observerStore.latitude.seconds = lat.seconds
+    observerStore.latitude.hemisphere = lat.hemisphere
+
+    observerStore.longitude.degrees = lng.degrees
+    observerStore.longitude.minutes = lng.minutes
+    observerStore.longitude.seconds = lng.seconds
+    observerStore.longitude.hemisphere = lng.hemisphere
+  })
+})
 </script>
 
 <style lang="scss">
